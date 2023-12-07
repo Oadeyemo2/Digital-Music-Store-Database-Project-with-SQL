@@ -1,0 +1,63 @@
+1.
+SELECT
+    ar.Name AS ArtistName,
+    SUM(il.Quantity) AS TotalQuantitySold
+FROM
+    Artist AS ar
+INNER JOIN
+    Album AS al ON ar.ArtistId = al.ArtistId
+INNER JOIN
+    Track AS tr ON al.AlbumId = tr.AlbumId
+INNER JOIN
+    InvoiceLine AS il ON tr.TrackId = il.TrackId
+GROUP BY
+    ArtistName
+ORDER BY
+    TotalQuantitySold DESC
+LIMIT 10;
+
+2.
+SELECT
+  c.FirstName || ' ' || c.LastName AS CustomerName,
+    c.Email AS CustomerEmail,
+    SUM(i.Total) AS TotalPurchased
+FROM
+    customer c
+JOIN
+    invoice i ON c.CustomerId = i.CustomerId
+GROUP BY
+     CustomerName, CustomerEmail
+ORDER BY
+    TotalPurchased DESC
+LIMIT 10;
+
+3.
+SELECT
+    m.name AS media_type,
+    SUM(il.quantity) AS total_qty,
+    ROUND(SUM(il.quantity) * 100.0 / (SELECT SUM(quantity) FROM invoiceline), 2) AS percentage
+FROM
+    mediatype m
+JOIN
+    track t ON t.mediatypeid = m.mediatypeid
+JOIN
+    invoiceline il ON il.trackid = t.trackid
+GROUP BY
+    media_type
+ORDER BY
+    total_qty DESC;
+
+4. 
+SELECT
+    cx.Country,
+    COUNT(*) AS NumberOfCustomers,
+    SUM(i.Total) AS TotalSales
+FROM
+    Invoice i
+JOIN
+    Customer cx ON cx.CustomerId = i.CustomerId
+GROUP BY
+    cx.Country
+ORDER BY
+    TotalSales DESC
+LIMIT 5;
